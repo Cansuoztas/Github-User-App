@@ -1,18 +1,19 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import NavBar from "./NavBar";
+import Followers from "./Followers";
 
-const Followers = () => {
-  const [following, setFollowing] = useState([]);
-  const getfollowers = JSON.parse(localStorage.getItem("followers"));
+const Home = () => {
+  const [followers, setFollowers] = useState([]);
+
   const user = JSON.parse(sessionStorage.getItem("userlogin"));
 
-  const url = `https://api.github.com/users/${user}/following`;
+  const url = `https://api.github.com/users/${user}/followers?per_page=100`;
 
-  const getFollowing = async () => {
+  const getFollowers = async () => {
     try {
       const { data } = await axios(url);
-      setFollowing(data);
-
+      setFollowers(data);
       console.log(data);
     } catch (error) {
       console.log("İkaz!!!");
@@ -20,17 +21,17 @@ const Followers = () => {
   };
 
   useEffect(() => {
-    getFollowing();
+    getFollowers();
   }, []);
+
+  localStorage.setItem("followers", JSON.stringify(followers));
 
   return (
     <>
-      {getfollowers.map((item2) => item2.id)}
-
+      <NavBar />
       <div className="main">
-        {following
-          .filter((item) => item.id !== getfollowers.map((item2) => item2.id))
-          .map((item) => {
+        {followers &&
+          followers.map((item) => {
             return (
               <div className="card">
                 <img src={item?.avatar_url} alt="" />
@@ -47,4 +48,4 @@ const Followers = () => {
   );
 };
 
-export default Followers;
+export default Home;
