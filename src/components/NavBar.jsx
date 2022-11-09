@@ -6,7 +6,7 @@ const NavBar = () => {
     <nav className="navbar navbar-expand-lg bg-light">
       <div className="container-fluid">
         <a className="navbar-brand" to="#">
-          Gitgub Followers App
+          GitHub Followers App
         </a>
         <button
           className="navbar-toggler"
