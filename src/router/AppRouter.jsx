@@ -1,19 +1,24 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Followers from "../components/Followers";
-import Home from "../components/Home";
-import LoginForm from "../components/LoginForm";
+import React from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import About from '../pages/About';
+import Home from '../pages/Home';
+import Login from '../pages/Login';
+import NavBar from '../components/NavBar';
+import NotFound from '../pages/NotFound';
 
-const AppRouter = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginForm />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/followers" element={<Followers />} />
-      </Routes>
-    </BrowserRouter>
-  );
-};
 
-export default AppRouter;
+const AppRouter = ({allFollowers, allFollowing, validUser}) => {
+    return (
+        <BrowserRouter>
+            <NavBar />
+            <Routes>
+                <Route path='/' element={<Login/>}/>
+                <Route path='/about' element={<About allFollowers={allFollowers} allFollowing={allFollowing}/>}/>
+                <Route path='/home' element={<Home allFollowers={allFollowers} validUser={validUser}/>}/>
+                <Route path='*' element={<NotFound/>}/>
+            </Routes>
+        </BrowserRouter>
+    )
+}
+
+export default AppRouter

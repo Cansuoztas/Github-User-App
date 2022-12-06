@@ -1,50 +1,42 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react'
+import Paginate from "./Paginate"
+import CardFollowers from "./CardFollowers"
+import loadingGif from "../assets/loading.gif"
+import {Container,Row} from "react-bootstrap"
 
-const Followers = () => {
-  const [following, setFollowing] = useState([]);
-  const getfollowers = JSON.parse(localStorage.getItem("followers"));
-  const user = JSON.parse(sessionStorage.getItem("userlogin"));
-
-  const url = `https://api.github.com/users/${user}/following`;
-
-  const getFollowing = async () => {
-    try {
-      const { data } = await axios(url);
-      setFollowing(data);
-
-      console.log(data);
-    } catch (error) {
-      console.log("İkaz!!!");
-    }
-  };
-
-  useEffect(() => {
-    getFollowing();
-  }, []);
+const Followers = ({followers}) => {
+  const {loading,followersList}=followers
+  const [followersPerPage]=useState(12)
+  const [currentPage,setCurrentPage]=useState(1)
+  const indexOfLastFollower=currentPage* followersPerPage
+  const indexOfFirstFollower= indexOfLastFollower-followersPerPage
+  const currentFollowers=followersList.slice(indexOfFirstFollower,indexOfLastFollower)
+  const totalPages= Math.ceil(followersList.length/followersPerPage)
 
   return (
-    <>
-      {getfollowers.map((item2) => item2.id)}
+    <div>
+      {
+        loading ? 
+        <div><img src={loadingGif} alt="loading..." /></div>
+        :
+        <div>
+          <Container>
+            <Row xs={2} md={3} lg={4}>
+              {currentFollowers?.map((follower,index)=>(
+                <div key={index}>
+                  <CardFollowers follower={follower}/>
+                </div>
+              ))}
+            </Row>
+          </Container>
+          <div>
+            <Paginate pages={totalPages} setCurrentPage={setCurrentPage}/>
+          </div>
+        </div>
+        
+      }
+    </div>
+  )
+}
 
-      <div className="main">
-        {following
-          .filter((item) => item.id !== getfollowers.map((item2) => item2.id))
-          .map((item) => {
-            return (
-              <div className="card">
-                <img src={item?.avatar_url} alt="" />
-                <h4>{item?.login}</h4>
-
-                <a href={item?.html_url} target="_blank">
-                  <button>Gel Gör Beni</button>
-                </a>
-              </div>
-            );
-          })}
-      </div>
-    </>
-  );
-};
-
-export default Followers;
+export default Followers

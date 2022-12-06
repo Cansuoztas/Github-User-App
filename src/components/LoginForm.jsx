@@ -1,38 +1,31 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react'
+import { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 const LoginForm = () => {
-  const [userlogin, setUserlogin] = useState();
-  const navigate = useNavigate();
-
+  const [userName,setUserName] = React.useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    sessionStorage.setItem("userlogin", JSON.stringify(userlogin));
-    navigate("/home");
-    setUserlogin("");
-  };
-
-  console.log("userlogin :>> ", userlogin);
-
+    sessionStorage.setItem("userName",userName);
+    window.location.href="/home";
+  }
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <h1>Kullanıcı İsim Gir</h1>
-
-        <input
-          onChange={(e) => setUserlogin(e.target.value)}
-          value={userlogin}
-          type="text"
-          name=""
-          id=""
-          placeholder="Username giriniz"
-        />
-        <br />
-        <button type="submit">Login</button>
-      </form>
+    <div className='d-flex justify-content-center'>
+      <Form className='col-6 text-center' onSubmit = {handleSubmit}>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label className='text-danger mt-5 fs-1'>Enter Your GitHub Username</Form.Label>
+          <Form.Control type="text" placeholder="Please Enter Your GitHub Username" value={userName} onChange={(e)=> setUserName(e.target.value)} required/>
+          <Form.Text className="text-muted">
+          Please be sure that your username is exactly correct else you can not see the your followers.
+        </Form.Text>
+        </Form.Group>
+        <Button  variant="success" type="submit" size="lg">
+          Submit
+        </Button>
+      </Form>
     </div>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm
